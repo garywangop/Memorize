@@ -29,20 +29,26 @@ struct Grid<Item, ItemView>: View where Item: Identifiable, ItemView: View {
     }
     
     func body(for item: Item, in layout: GridLayout) -> some View {
-        let index = self.index(of: item)
+        let index = items.firstIndex(matching: item)!
+        // Group is a view builder but does not provide anything like ZStack/HStack(是个viewbuilder但是不排版)
+        // 按理来说应该这么写，但是这个程序实际运行的时候，我们不希望index是nil，所以价格感叹号，crash了最好，还能及时发现问题
+        /*
+        return Group {
+            if index != nil {
+                viewForItem(item)
+                    .frame(width: layout.itemSize.width, height: layout.itemSize.height)
+                    .position(layout.location(ofItemAt: index!))
+            }
+        }
+         感叹号也没必要加在.position(layout.location(ofItemAt: index!))，直接加载let index = ..就好，早发现nil早crash
+         */
         return viewForItem(item)
             .frame(width: layout.itemSize.width, height: layout.itemSize.height)
             .position(layout.location(ofItemAt: index))
     }
     
-    func index(of item: Item) -> Int {
-        for index in 0..<items.count {
-            if items[index].id == item.id {
-                return index
-            }
-        }
-        return 0 // TODO
-    }
+    
 }
+
 
 
