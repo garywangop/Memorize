@@ -13,6 +13,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable{
     
     var indexOfTheOneAndOnlyFaceUpCard: Int? {
         get {
+            /*
             var faceUpCardIndices = [Int]()
             for index in cards.indices {
                 if cards[index].isFaceUp {
@@ -24,14 +25,23 @@ struct MemoryGame<CardContent> where CardContent: Equatable{
             } else {
                 return nil
             }
+             */
+            //var faceUpCardIndices = cards.indices.filter {index in cards[index].isFaceUp}
+            // 进一步简化
+            cards.indices.filter {cards[$0].isFaceUp}.only
+            
         }
         set {
             for index in cards.indices {
+                /*
                 if index == newValue {
                     cards[index].isFaceUp = true
                 } else {
                     cards[index].isFaceUp = false
                 }
+                 */
+                // 简写之后可以写成这样
+                cards[index].isFaceUp = index == newValue
             }
         }
     }
@@ -48,7 +58,6 @@ struct MemoryGame<CardContent> where CardContent: Equatable{
                 }
                 cards[chosenIndex].isFaceUp = true
             } else {
-                
                 indexOfTheOneAndOnlyFaceUpCard = chosenIndex
             }
         }
